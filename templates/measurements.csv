@@ -1,0 +1,1 @@
+patient_id,side,run_id,rater_id,replicate,metric,value,unit,method,reference_value,reference_id,plane_or_station,status,failure_reason,config_sha256

@@ -1,8 +1,35 @@
+# Local runtime and credentials
 __pycache__/
-*.pyc
-*.json
-*.mrb
-*.nrrd
-*.nii*
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+.env*
+*.pem
+*.key
+
+# Imaging and case-derived outputs belong in the secure study workspace
 *.dcm
-DICOM/
+*.DCM
+*.nrrd
+*.nhdr
+*.nii
+*.nii.gz
+*.mha
+*.mhd
+*.mrb
+*.mrml
+*.zip
+*.vtp
+*.vtk
+*.stl
+*.obj
+*.json
+*.csv
+outputs/
+reviews/
+ContactPilot_*/
+
+# Versioned reference configuration and blank forms only
+!scripts/(C) literature_priors.json
+!templates/*.csv

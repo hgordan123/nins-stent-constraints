@@ -1,0 +1,13 @@
+metric,unit,definition,method_stage,implementation,legacy_key
+spf_localization_error_mm,mm,Euclidean distance to independent consensus SPF,independent_localizer_only,not_implemented,
+spf_refinement_displacement_mm,mm,Seed-to-refined point displacement; not localization accuracy,assisted_refinement,legacy,spf.shift_from_seed_mm
+seeded_min_chord_axial_mm,mm,Shortest sampled bounded chord through seed in axial plane,assisted_refinement,legacy,spf.axial.aperture_mm
+seeded_min_chord_coronal_mm,mm,Shortest sampled bounded chord through seed in coronal plane,assisted_refinement,legacy,spf.coronal.aperture_mm
+legacy_coronal_surface_to_spf_mm,mm,Coronal-section exposed surface to SPF reference distance; not conduction,assisted_geometry,legacy,conduction_gap_mm
+true_feret_min_mm,mm,Minimum supporting-line separation of rim projection; record plane,rim_geometry,not_implemented,
+spf_aperture_area_mm2,mm2,Area of reviewed rim projected into local aperture plane,rim_geometry,not_implemented,
+local_lumen_inscribed_diameter_mm,mm,Inscribed diameter at named station; not whole-device fit,assisted_geometry,legacy,spf_station.mucosal_inscribed_diameter_mm
+flat_contact_fraction,fraction,Flat face apposition at specified gap tolerance on reviewed patch,contact_geometry,existing_optimizer,
+surface_boundary_error_mm,mm,Local boundary error versus independently reviewed surface; name summary statistic,surface_validation,not_implemented,
+active_reference_minutes,min,Active reference annotation time excluding interruptions,workflow,manual,
+active_correction_minutes,min,Active correction time excluding runtime and interruptions,workflow,manual,

@@ -1,0 +1,13 @@
+patient_id,planned_group,enrollment_status,source_id,patient_link_verified,adult_eligibility_verified,native_series_verified,intensity_units,contrast_status,orientation_verified,coverage_verified,anatomy_features,prior_method_exposure,intake_decision,reason
+P001,setup,unfilled,,,,,,,,,,,,
+P002,setup,unfilled,,,,,,,,,,,,
+P003,setup,unfilled,,,,,,,,,,,,
+P004,frozen_evaluation,unfilled,,,,,,,,,,,,
+P005,frozen_evaluation,unfilled,,,,,,,,,,,,
+P006,frozen_evaluation,unfilled,,,,,,,,,,,,
+P007,frozen_evaluation,unfilled,,,,,,,,,,,,
+P008,frozen_evaluation,unfilled,,,,,,,,,,,,
+P009,frozen_evaluation,unfilled,,,,,,,,,,,,
+P010,frozen_evaluation,unfilled,,,,,,,,,,,,
+P011,frozen_evaluation,unfilled,,,,,,,,,,,,
+P012,frozen_evaluation,unfilled,,,,,,,,,,,,

@@ -1,88 +1,64 @@
-# NINS stent design constraints
+# NINS SPG morphometry and stent geometry pilot
 
-Derives transnasal stent design constraints from CT sinus scans, in 3D Slicer, from **one seed click per side**.
+Research scripts for reviewing sinus CT anatomy, calculating morphometric measurements and exploring electrode contact geometry in 3D Slicer. The pilot combines human anatomical review with automated geometry and candidate segmentation.
 
-> **v0.2.0. Not validated. Do not use these numbers in a deck, a filing, or a design freeze.**
->
-> It has never been run against a deviated septum, concha bullosa, dental amalgam, or mucosal disease filling the airway. That last one is the failure mode that would most directly corrupt the headline number.
->
-> This round exists to find out where it breaks. Failures are the useful output.
+The first milestone is a 12-patient feasibility pilot: three setup cases and nine evaluation cases after the method is fixed. The latest project records confirm no enrolled or clinician-reviewed pilot cases. The software is not a validated device-design or stimulation model.
 
-## The question it answers
+## Start here
 
-Does a transnasal stent surface get within **5 mm** of the sphenopalatine foramen, the distance over which microcurrent is expected to conduct through tissue to the neural structures exiting the SPF? And what are the stent's dimensions?
+- [Team synopsis and working workflow](docs/TEAM_WORKFLOW.md)
+- [Shareable Word document](docs/NINS%20SPG%20Pilot%20Team%20Workflow.docx)
+- [Pilot setup and annotation guide](docs/PILOT_QUICKSTART.md)
+- [Existing autosegmentation and proposed integration](docs/AUTOMATION_ROADMAP.md)
+- [Stent measurement engine guide](RUNNING.md)
+- [Contact geometry guide](docs/CONTACT_GEOMETRY.md)
 
-Nothing else. It is separate from the SPG anatomy repeatability study, shares no data with it, and writes nothing into it.
+## What is implemented
 
-## Quick start
+| Component | File | Current behavior |
+|---|---|---|
+| Image intake | `scripts/NINS_Pilot_Intake.py` | Inventories NRRD exports in ZIP archives, verifies payloads and stages a temporary copy |
+| Guided review | `scripts/NINS_Pilot_Review.py` | Creates eight empty, source-associated annotation nodes and exports review state |
+| Stent geometry | `nins_stent_constraints.py` | Existing v0.3.0 engine: seeded SPF refinement, coronal airway profiles and descriptive morphometry |
+| Contact geometry | `scripts/(C) NINS_Contact_Geometry_0912.py` | Evaluates candidate electrode faces against a supplied, reviewed surface patch |
+| Legacy autosegmentation QC | `scripts/(C) Autoseg_Measurements_0729.py` | Threshold tissue masks, surface/curve extraction and seeded bone-label proposals; anatomical review required |
+| Manual measurement | `scripts/Landmark_Measurements_0510.py` | Computes the original study measurements from manually supplied lines and curves |
+| Agreement analysis | `scripts/(C) Autoseg_Agreement_0729.py` | Compares compatible manual/automatic measurement tables |
 
-Open a CT sinus scan in 3D Slicer, place one point fiducial named `SPF_R` anywhere inside the right sphenopalatine foramen, then in the Python Interactor:
+The pilot review helper does not invoke the segmentation or measurement engines. The proposed unified Slicer panel and TotalSegmentator integration are **not implemented**. In the legacy QC script, `run()` defaults to the `engine` stage; segmentation stages must be requested explicitly.
 
-```python
-exec(open("/path/to/nins_stent_constraints.py").read())
-report = run()
-print_report(report)
-```
+## Measurement interpretation
 
-Full seed list, options and QC flags are in [RUNNING.md](RUNNING.md).
+Some unchanged legacy code uses labels that overstate what the geometry establishes. Apply these definitions when reviewing output:
 
-## What it outputs
-
-```
-  midline: x = -12.85 mm, yaw -1.15 deg, Dice 0.728 (sharp)
-  --- side R ---
-    SPF aperture      axial 3.63 mm   coronal 4.47 mm
-    CONDUCTION GAP    3.49 mm   (budget 5.0 mm -> WITHIN)
-    corridor length   56.00 mm   (53 stations, derived)
-    stent diameter    min 2.24  max 13.17 mm
-    binding point     2.24 mm at 10.0 mm
-    compressible      3.76 mm (bony minus mucosal)
-```
-
-| Constraint | Sets |
+| Legacy output | Interpretation for the pilot |
 |---|---|
-| Conduction gap, mucosal surface to SPF | whether the 5 mm budget is met. The headline |
-| Lumen profile, diameter vs position | stent diameter, taper, binding point |
-| Corridor length | stent length |
-| Compressible margin, bony minus mucosal | how much a stent can recruit by compressing mucosa |
-| Vidian and V2 clearance | current-spread safety surrogates |
+| `conduction_gap_mm`, `within_budget` | Coronal surface-to-SPF distance and comparison with a historical constant. The 5 mm constant is not a validated stimulation threshold. |
+| `min_feret_aperture` | Shortest sampled chord through the seed in the named plane. It is not true aperture-plane Feret width. |
+| `compressible` | Bony-minus-mucosal geometric difference. It does not establish safe tissue compression. |
+| `stent diameter` | Local geometric diameter estimate. It does not establish whole-device insertion clearance. |
+| Estimated SPG point | A derived reference from supplied anatomy, not a directly observed ganglion segmentation. |
 
-## What is automatic and what is not
+The publication preserves the existing stent algorithm and its output keys for compatibility. Read the current definitions above before using historical examples or source comments.
 
-**Derived with no operator input, verified on a real scan:**
+## Requirements and checks
 
-- **Midsagittal plane**, by reflective symmetry of the bone mask. Reproducible to **SD 0.13 mm** across 4 bone thresholds and 2 downsample factors, with a sharp optimum, and confirmed correct by rendering it.
-- **SPF centre and both apertures**, by direction-free minimum feret: one seed, no direction, so the operator's angle cannot influence the result. On the reference scan **3.63 mm** against a published SPF width of 3.79 +/- 0.35 mm, where a hand-drawn chord read **6.35 mm**.
-- **Corridor endpoints**, from the posterior edge of the septum and the anterior edge of the maxilla, which sit in the midline almost always and so are findable on the symmetry plane.
+Run scene operations inside 3D Slicer with its bundled Python, NumPy, SciPy and VTK. The intake helper uses the Python standard library and can run outside Slicer. Contact numerical tests require NumPy; VTK adapter tests run only when VTK is available.
 
-**Not derived: anatomical identification.** Seven approaches have been tried and all failed. The most recent was deriving midline bony landmarks by unbounded argmax on the symmetry plane, which put ANS at the chin and PNS on the sphenoid floor and read the hard palate at 66.5 mm against a published 45 to 55 mm.
+From the repository directory:
 
-The working rule: **geometry automates, recognition does not, refinement does.** Hence one seed.
+```bash
+python3 scripts/tests/test_pilot_intake.py
+PythonSlicer scripts/tests/test_contact_geometry.py
+PythonSlicer test_calibration.py
+```
 
-## Design decisions worth knowing
+Use the `PythonSlicer` executable in your Slicer installation. On macOS, its usual path is `/Applications/Slicer.app/Contents/bin/PythonSlicer`. The calibration suite requires VTK; ordinary system Python may not include it.
 
-- **The corridor is sampled continuously**, every 1 mm, rather than at named anatomical stations. A stent is a continuous device, so taper and binding point are what matter. This also sidesteps a live ambiguity: two CT studies disagree by 4.3 mm on where the basal lamella landmark sits.
-- **The stent diameter is an axis-centred circle on a tracked centreline**, not the largest circle in the airway. The maxillary sinus is genuinely continuous with the nasal cavity through the ostium, so a global maximum reported a 25 mm stent diameter on the reference scan.
-- **`NASAL_HALF_WIDTH_MM = 16.0` is a prior, not a measurement.** It is what keeps the centreline out of the maxillary sinus, and unusual anatomy will break it.
-- **The bony contour is a star-shaped approximation** about the centreline, so it under-reports a re-entrant recess. It returns nothing rather than a guess when too many rays are unbounded.
-- **The corridor is refused outright when there is no trustworthy midline**, because without one the two nasal cavities merge across the septum and the tool would report roughly double the true area. Refusing beats reporting wrong.
-
-## Requirements
-
-3D Slicer 5.6+ with its bundled Python (numpy, scipy, vtk). No external packages, no network, no deep learning.
-
-Thresholds self-calibrate per scan from its own histogram, and scans outside the method's competence are refused rather than measured. Run `test_calibration.py` to verify both.
-
-Runs in about 20 s on a cropped sinus CT, about 85 s on a full head, most of it the symmetry search.
+These checks exercise intake, review readiness rules and synthetic geometry/calibration. They do not validate clinical anatomy, stimulation, tissue pressure or insertion. The full legacy QC pipeline needs a separate Slicer validation run on reviewed cases. The original manual-arm repetitions and dataset remain separate from this pilot.
 
 ## Data handling
 
-The script reads whatever volume is loaded in Slicer and writes only what you ask it to via `write_json_dir`. **It contains no patient data and none should be committed here.** `.gitignore` excludes DICOM, NRRD, NIfTI, MRB and JSON for that reason. Keep scan data and per-subject output under the same access controls as the source DICOM.
+Copy the [blank templates](templates/) into your secure study workspace before entering case information. Keep original imaging, patient linkage, landmarks, segmentations and per-case outputs outside this repository. No patient scans, patient mappings or case-derived meshes are included in this publication.
 
-## Feedback
-
-For each scan: the printed block, the JSON if saved, and a one-line note on anything that looked wrong on screen. Cases where it fails are worth more than cases where it works.
-
-## Provenance
-
-Generated with Claude Code. Source of truth is the NINS SPG Anatomy Study vault, `03 Projects/NINS/SPG Anatomy Study/`, where this file is `06 System/(C) NINS_Stent_Constraints_0811.py` and RUNNING.md is `07 Skills/(C) Run Stent Constraints Tool.md`. The build record, including the four defects found and fixed during development, is in `03 Data & QC/(C) Auto Arm QC Log.md`.
+The Word document is a dated team snapshot. The Markdown guides use repository-relative links and are the working instructions for this repository.

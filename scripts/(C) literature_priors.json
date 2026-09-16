@@ -1,0 +1,446 @@
+{
+  "schema_version": "1",
+  "compiled": "2026-07-30",
+  "compiled_by": "Claude, from a PubMed and Semantic Scholar search of skull base foramen morphometry",
+  "USAGE": [
+    "ADVISORY FLAGGING ONLY. These values must never reject a measurement, never",
+    "constrain the manual arm, and never alter a recorded value. They exist to draw",
+    "a human's attention to a value that looks unusual, nothing more.",
+    "",
+    "The reason is that this study exists to characterise SPG-region anatomy for",
+    "device design. If published windows were used to reject outliers, the study",
+    "would partly be measuring its own priors and could mask exactly the anatomical",
+    "variation the NINS device has to accommodate. A subject outside these bands is",
+    "a subject to LOOK AT, not a subject to exclude.",
+    "",
+    "DEFINITIONAL MISMATCH IS REAL AND LARGE. Most of these come from surgical and",
+    "endoscopic landmark studies whose landmark definitions differ from this",
+    "protocol's Appendix A. The clearest demonstration is inside this very file:",
+    "SPF to hard palate is reported at 15.58 mm while SPF to nasal floor is reported",
+    "at 26.6 mm. Those are different landmarks measured differently, not a",
+    "contradiction, and treating either as a bound on the other would be wrong.",
+    "Every entry therefore carries a definition_note and a confidence field.",
+    "",
+    "2026-08-06 addition: no study found in this search reports inter or intra-observer reliability for any of these measurements. That is a genuine gap in the literature and one this study is positioned to fill, since it measures 3 times per subject per side by a single measurer."
+  ],
+  "sources": {
+    "isaacs2007": {
+      "citation": "Isaacs S, Goyal P. Endoscopic anatomy of the pterygopalatine fossa. Am J Rhinol. 2007",
+      "pmid": "17999806",
+      "doi": "10.2500/ajr.2007.21.3085",
+      "design": "cadaveric endoscopic dissection",
+      "n": null
+    },
+    "gupta2019": {
+      "citation": "Gupta T, et al. Landmarks for Accurate Sphenopalatine Ganglion Block Via the Transnasal and Infrazygomatic Approaches: A Cadaveric Study. Neurosurgery. 2019",
+      "design": "30 mid-sagittal cadaveric head and neck sections, digital vernier caliper",
+      "n": 30
+    },
+    "spielman2019": {
+      "citation": "Spielman D, et al. Locating and Preserving the Sphenopalatine Ganglion in Endoscopic Endonasal Pterygopalatine Fossa Surgery: An Anatomical Study. Am J Rhinol Allergy. 2019",
+      "design": "8 cadaveric pterygopalatine fossa dissections",
+      "n": 8
+    },
+    "hwang2011": {
+      "citation": "Hwang S, et al. Three-Dimensional Computed Tomography Analysis to Help Define an Endoscopic Endonasal Approach of the Pterygopalatine Fossa. Am J Rhinol Allergy. 2011",
+      "design": "retrospective CT with 3D reconstruction",
+      "n": 98
+    },
+    "sir2019": {
+      "citation": "Sir E, et al. Morphological Description and Clinical Implication of Sphenopalatine Foramen for Accurate Transnasal Sphenopalatine Ganglion Block: An Anatomical Study. Medeniyet Med J. 2019",
+      "design": "10 cadaver semi-heads and 18 dry skulls",
+      "n": 28
+    },
+    "mansour2017": {
+      "citation": "Landmarks for rapid localization of the sphenopalatine foramen: A radiographic morphometric analysis. Allergy Rhinol (Providence). 2017",
+      "pmid": "28583229",
+      "doi": "10.2500/ar.2017.8.0196",
+      "design": "radiographic morphometric analysis",
+      "n": null
+    },
+    "sahin2016": {
+      "citation": "The sphenoid sinus, foramen rotundum and vidian canal: a radiological study of anatomical relationships. Braz J Otorhinolaryngol. 2016",
+      "pmid": "27283380",
+      "doi": "10.1016/j.bjorl.2016.04.013",
+      "design": "cross-sectional paranasal sinus CT",
+      "n": 100
+    },
+    "munteanu2026": {
+      "citation": "Munteanu IM, et al. Cone-Beam CT Morphometry of the Foramen Rotundum and Adjacent Skull-Base Landmarks. J Craniofac Surg. 2026",
+      "design": "retrospective CBCT, 100 sides",
+      "n": 50
+    },
+    "vidiancbct2019": {
+      "citation": "Morphometric analysis of vidian canal and its relations with surrounding anatomic structures by using cone-beam computed tomography. Folia Morphol (Warsz). 2019",
+      "pmid": "31448400",
+      "doi": "10.5603/FM.a2019.0094",
+      "design": "CBCT, 0.5 mm slices",
+      "n": 100
+    },
+    "stajcic2010": {
+      "citation": "Stojcev Stajcic L, et al. Anatomical study of the pterygopalatine fossa pertinent to the maxillary nerve block at the foramen rotundum. Int J Oral Maxillofac Surg. 2010",
+      "design": "85 dried human skulls, 159 intact pterygopalatine fossae",
+      "n": 85
+    },
+    "chen2010": {
+      "citation": "Chen CC, et al. Comparative research of the thin transverse sectional anatomy and the multislice spiral CT on Pterygopalatine Fossa. Turk Neurosurg. 2010",
+      "design": "cadaveric 0.1 mm serial sectioning vs 0.6 mm MSCT",
+      "n": 2
+    },
+    "machado2022": {
+      "citation": "Machado A, et al. Greater Palatine Canal: Computed Tomography-Based Anatomic Analysis. Ear Nose Throat J. 2022",
+      "design": "retrospective paranasal sinus CT, 200 sides",
+      "n": 100
+    },
+    "moideen2025": {
+      "citation": "Moideen SP, Joseph T, Thomas I, Joseph NA, Pulimoottil DT. A Radiographic Morphometric Analysis for the Preoperative Localization of the Sphenopalatine Artery. Indian J Otolaryngol Head Neck Surg. 2025;77(3):1424-1428",
+      "pmcid": "PMC11909386",
+      "design": "retrospective paranasal sinus CT, 1 mm reconstructions, manual measurement, 100 sides",
+      "n": 50
+    }
+  },
+  "priors": [
+    {
+      "id": "spg_to_spf_distance",
+      "quantity": "3D distance from the sphenopalatine foramen to the sphenopalatine ganglion",
+      "mean_mm": 6.3,
+      "sd_mm": null,
+      "range_mm": [
+        4.0,
+        6.3
+      ],
+      "sources": [
+        "gupta2019",
+        "isaacs2007",
+        "spielman2019"
+      ],
+      "converging": true,
+      "confidence": "high",
+      "definition_note": "Three independent cadaveric studies converge. Gupta reports 4 mm posterior and 4.7 mm lateral, resultant 6.3 mm. Isaacs reports 4 mm medially and 6 mm laterally. Spielman reports 4.5 +/- 1.1 mm lateral and 1 +/- 1.4 mm inferior. The SPG is consistently LATERAL and slightly posterior or inferior to the SPF.",
+      "flag_band_mm": [
+        1.0,
+        15.0
+      ],
+      "used_for": "sanity check on the computed SPG centroid against the SPF_inf landmark. A centroid far outside this band means the three input lines were misplaced, not that the anatomy is unusual."
+    },
+    {
+      "id": "spf_diameter",
+      "quantity": "sphenopalatine foramen aperture diameter",
+      "mean_mm": 5.3,
+      "sd_mm": 1.3,
+      "range_mm": [
+        3.79,
+        6.44
+      ],
+      "sources": [
+        "hwang2011",
+        "sir2019"
+      ],
+      "converging": true,
+      "confidence": "moderate",
+      "definition_note": "Hwang gives a single mean diameter of 5.3 +/- 1.3 mm on 3D CT. Sir gives width 3.79 +/- 0.35 mm and length 6.44 +/- 0.94 mm on cadaver and dry skull, so the foramen is an ellipse rather than a circle. The study's axial and coronal diameters are therefore expected to DIFFER from each other, and should bracket rather than match the single-value estimate.",
+      "maps_to_measurement_keys": [
+        "SPF DIAMETER - AXIAL (mm)",
+        "SPF DIAMETER - CORONAL (mm)"
+      ],
+      "flag_band_mm": [
+        2.0,
+        10.0
+      ]
+    },
+    {
+      "id": "ans_to_spf",
+      "quantity": "anterior nasal spine to sphenopalatine foramen",
+      "mean_mm": 53.9,
+      "sd_mm": 2.98,
+      "range_mm": [
+        52.9,
+        55.0
+      ],
+      "sources": [
+        "sir2019",
+        "gupta2019"
+      ],
+      "converging": true,
+      "confidence": "moderate",
+      "definition_note": "Sir 52.90 +/- 2.98 mm, Gupta 55 mm at a mean elevation of 22 to 26 degrees from the hard palate. Both are cadaver or dry skull. A separate radiographic study measuring from the NASAL SILL rather than ANS gives 64.4 +/- 6 mm, which is a different landmark and is deliberately not pooled here.",
+      "maps_to_measurement_keys": [
+        "ANS to SPF (SUMMED) (mm)"
+      ],
+      "flag_band_mm": [
+        40.0,
+        70.0
+      ]
+    },
+    {
+      "id": "spf_to_foramen_rotundum",
+      "quantity": "sphenopalatine foramen to foramen rotundum",
+      "mean_mm": 7.0,
+      "sd_mm": null,
+      "range_mm": null,
+      "sources": [
+        "isaacs2007"
+      ],
+      "converging": false,
+      "confidence": "low",
+      "definition_note": "Single cadaveric source, no dispersion reported. Treat as an order-of-magnitude anchor only.",
+      "maps_to_measurement_keys": [
+        "INF FORAMEN ROTUNDUM to SPF - CORONAL, Summed (mm)"
+      ],
+      "flag_band_mm": [
+        2.0,
+        20.0
+      ]
+    },
+    {
+      "id": "spf_to_nasal_floor",
+      "quantity": "sphenopalatine foramen to nasal floor, vertical",
+      "mean_mm": 23.6,
+      "sd_mm": 4.6,
+      "range_mm": null,
+      "sources": [
+        "moideen2025",
+        "mansour2017"
+      ],
+      "converging": true,
+      "confidence": "moderate",
+      "definition_note": "Moideen 2025 gives 23.6 plus or minus 4.6 mm on 100 sides, Mansour 2017 gives 26.6 plus or minus 2.6 mm. These overlap within their SDs and are treated as converging. Both are vertical SPF to NASAL FLOOR on coronal cuts. Still distinct from spf_to_hard_palate at 15.58 mm, which is a different reference surface and must not be pooled with these.",
+      "maps_to_measurement_keys": [
+        "SPF to NASAL FLOOR - CORONAL (mm)"
+      ],
+      "flag_band_mm": [
+        10.0,
+        40.0
+      ]
+    },
+    {
+      "id": "spf_to_hard_palate",
+      "quantity": "sphenopalatine foramen to hard palate",
+      "mean_mm": 15.58,
+      "sd_mm": 1.68,
+      "range_mm": null,
+      "sources": [
+        "sir2019"
+      ],
+      "converging": false,
+      "confidence": "low",
+      "definition_note": "See the conflict noted in spf_to_nasal_floor. Dry skull and cadaver measurement.",
+      "maps_to_measurement_keys": [],
+      "flag_band_mm": null
+    },
+    {
+      "id": "spf_inferior_to_greater_palatine_canal",
+      "quantity": "inferior bony border of SPF to the cranial entrance of the greater palatine canal",
+      "mean_mm": 9.39,
+      "sd_mm": 1.72,
+      "range_mm": null,
+      "sources": [
+        "machado2022"
+      ],
+      "confidence": "moderate",
+      "definition_note": "CT-based, 200 sides, no significant side difference. Relevant because the study's GP canal sagittal line is one of the three SPG centroid inputs.",
+      "maps_to_measurement_keys": [],
+      "flag_band_mm": null
+    },
+    {
+      "id": "vidian_canal_to_spf",
+      "quantity": "vidian canal to the posteroinferior margin of the SPF",
+      "mean_mm": 3.8,
+      "sd_mm": 1.0,
+      "range_mm": null,
+      "sources": [
+        "hwang2011"
+      ],
+      "confidence": "moderate",
+      "definition_note": "The vidian canal lies above the inferior SPF margin in 92 percent of sides and lateral to the posterior SPF margin in 98 percent. Useful as a topological expectation for the pterygoid seed, which is anchored on the operator's vidian line.",
+      "used_for": "pterygoid bone seed sanity"
+    },
+    {
+      "id": "foramen_rotundum_to_midline",
+      "quantity": "foramen rotundum to skull base midline",
+      "mean_mm": 19.17,
+      "sd_mm": 2.12,
+      "range_mm": [
+        19.0,
+        19.34
+      ],
+      "sources": [
+        "sahin2016"
+      ],
+      "confidence": "high",
+      "definition_note": "Right 19.00 +/- 2.07 mm, left 19.34 +/- 2.17 mm, n = 100 CT. Mean bilateral FR separation 38.48 +/- 3.87 mm. A statistically significant but sub-millimetre side difference.",
+      "used_for": "independent sanity check on the midline estimate and on the FR_inf landmark, and a bound for the sphenoid seed box"
+    },
+    {
+      "id": "foramen_rotundum_to_vidian_canal",
+      "quantity": "foramen rotundum to vidian canal, direct",
+      "mean_mm": 8.7,
+      "sd_mm": 1.9,
+      "range_mm": null,
+      "sources": [
+        "munteanu2026",
+        "hwang2011"
+      ],
+      "converging": true,
+      "confidence": "moderate",
+      "definition_note": "Munteanu 8.70 +/- 1.90 mm direct. Hwang decomposes it as 5.8 +/- 1.9 mm vertical and 8.5 +/- 1.9 mm horizontal on the sphenoid surface plane, which is consistent with the direct distance.",
+      "used_for": "spacing sanity between the pterygoid and sphenoid seeds"
+    },
+    {
+      "id": "vidian_canal_length",
+      "quantity": "vidian canal length",
+      "mean_mm": 13.05,
+      "sd_mm": 2.1,
+      "range_mm": null,
+      "sources": [
+        "vidiancbct2019"
+      ],
+      "confidence": "high",
+      "definition_note": "Right 13.09 +/- 2.07 mm, left 13.01 +/- 2.12 mm, CBCT n = 100 at 0.5 mm.",
+      "used_for": "sanity bound on PTERYGOID_EXTEND_MM, which extends the vidian seed posteriorly"
+    },
+    {
+      "id": "vidian_canal_diameter",
+      "quantity": "vidian canal diameter",
+      "mean_mm": 2.4,
+      "sd_mm": 0.7,
+      "range_mm": null,
+      "sources": [
+        "hwang2011"
+      ],
+      "confidence": "moderate",
+      "definition_note": "Constrains PTERYGOID_SEED_R_MM: a seed radius much larger than the canal itself will recruit neighbouring bone indiscriminately."
+    },
+    {
+      "id": "foramen_rotundum_diameter",
+      "quantity": "foramen rotundum diameter",
+      "mean_mm": 2.8,
+      "sd_mm": 0.5,
+      "range_mm": null,
+      "sources": [
+        "hwang2011"
+      ],
+      "confidence": "moderate",
+      "definition_note": "Munteanu separately reports an FR height of 5.11 +/- 1.68 mm, which is the canal's cross-sectional height rather than its bore, so the two are not directly comparable."
+    },
+    {
+      "id": "pterygopalatine_fossa_width",
+      "quantity": "pterygopalatine fossa width",
+      "mean_mm": null,
+      "sd_mm": null,
+      "range_mm": [
+        1.0,
+        9.0
+      ],
+      "sources": [
+        "stajcic2010"
+      ],
+      "confidence": "high",
+      "definition_note": "85 dried skulls. The authors explicitly describe the dimensions as INCONSISTENT: volume 0.1 to 1 cm3, width 1 to 9 mm, depth 6 to 22 mm. This ninefold width range is the single strongest argument in this file against using literature values as rejection criteria.",
+      "used_for": "palatine and pterygoid seed box scale"
+    },
+    {
+      "id": "pterygopalatine_fossa_depth",
+      "quantity": "pterygopalatine fossa depth",
+      "mean_mm": null,
+      "sd_mm": null,
+      "range_mm": [
+        6.0,
+        22.0
+      ],
+      "sources": [
+        "stajcic2010"
+      ],
+      "confidence": "high",
+      "definition_note": "See pterygopalatine_fossa_width."
+    },
+    {
+      "id": "spg_dimensions",
+      "quantity": "sphenopalatine ganglion itself, cross-section at its largest layer",
+      "mean_mm": null,
+      "sd_mm": null,
+      "range_mm": [
+        1.92,
+        3.91
+      ],
+      "sources": [
+        "chen2010"
+      ],
+      "confidence": "low",
+      "definition_note": "3.91 x 1.92 mm from 0.1 mm cadaveric serial sectioning, n = 2 heads. Very small n, but it is the only direct measurement of the ganglion found and is directly relevant to NINS device sizing: the target is a roughly 4 x 2 mm structure.",
+      "used_for": "device design criteria context, not segmentation"
+    },
+    {
+      "id": "spf_to_basal_lamella",
+      "quantity": "sphenopalatine foramen to basal lamella of the middle turbinate, anteroposterior",
+      "mean_mm": null,
+      "sd_mm": null,
+      "range_mm": [
+        7.5,
+        11.8
+      ],
+      "sources": [
+        "moideen2025",
+        "mansour2017"
+      ],
+      "converging": false,
+      "confidence": "low",
+      "definition_note": "CONFLICT, and it matters. Moideen 2025 reports 7.5 plus or minus 2.0 mm on 100 sides; Mansour 2017 reports 11.8 plus or minus 1.9 mm. The means differ by 4.3 mm and the SDs barely overlap, so this is unlikely to be sampling noise. The basal lamella is a broad plate rather than a point, so the two studies are probably measuring to different parts of it. Consequence for this study: the basal lamella was proposed as the posterior anchor for both middle turbinate curves, and it cannot serve as a reproducible anchor until WHICH PART of the lamella is specified. Resolve before the reference pass.",
+      "used_for": "proposed anchor for MT_medial_ax, MT_medial_cor and MT_inferior_cor"
+    },
+    {
+      "id": "spf_to_maxillary_line",
+      "quantity": "sphenopalatine foramen to maxillary line, anteroposterior",
+      "mean_mm": 36.3,
+      "sd_mm": 2.3,
+      "range_mm": null,
+      "sources": [
+        "moideen2025",
+        "mansour2017"
+      ],
+      "converging": true,
+      "confidence": "high",
+      "definition_note": "Moideen 2025 36.3 plus or minus 2.3 mm, Mansour 2017 36.7 plus or minus 5.5 mm. Close agreement on the mean and Moideen more than halves the SD. One of the tightest SPF relationships published.",
+      "flag_band_mm": [
+        25.0,
+        50.0
+      ]
+    },
+    {
+      "id": "spf_to_anterior_mt_head",
+      "quantity": "sphenopalatine foramen to anterior head of middle turbinate, anteroposterior",
+      "mean_mm": 34.8,
+      "sd_mm": 3.1,
+      "range_mm": null,
+      "sources": [
+        "moideen2025",
+        "mansour2017"
+      ],
+      "converging": true,
+      "confidence": "moderate",
+      "definition_note": "Moideen 2025 34.8 plus or minus 3.1 mm, Mansour 2017 33.8 plus or minus 6.7 mm. Converging, with Moideen again considerably tighter.",
+      "flag_band_mm": [
+        20.0,
+        50.0
+      ]
+    },
+    {
+      "id": "spf_to_choanal_arch",
+      "quantity": "sphenopalatine foramen to choanal arch, anteroposterior",
+      "mean_mm": 9.0,
+      "sd_mm": 1.8,
+      "range_mm": null,
+      "sources": [
+        "moideen2025",
+        "mansour2017"
+      ],
+      "converging": true,
+      "confidence": "high",
+      "definition_note": "Moideen 2025 9.0 plus or minus 1.8 mm, Mansour 2017 9.2 plus or minus 1.4 mm. Two independent CT studies agreeing to 0.2 mm. The most reliably reproduced SPF relationship found, which supports the choanal arch as a posterior anchor.",
+      "flag_band_mm": [
+        3.0,
+        20.0
+      ]
+    }
+  ]
+}
