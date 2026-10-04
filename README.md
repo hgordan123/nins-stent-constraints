@@ -6,6 +6,7 @@ The first milestone is a 12-patient feasibility pilot: three setup cases and nin
 
 ## Start here
 
+- [NINS Pilot panel: install, synthetic demo and setup-case workflow](docs/PILOT_PANEL.md)
 - [Team synopsis and working workflow](docs/TEAM_WORKFLOW.md)
 - [Shareable Word document](docs/NINS%20SPG%20Pilot%20Team%20Workflow.docx)
 - [Pilot setup and annotation guide](docs/PILOT_QUICKSTART.md)
@@ -17,6 +18,8 @@ The first milestone is a 12-patient feasibility pilot: three setup cases and nin
 
 | Component | File | Current behavior |
 |---|---|---|
+| Guided setup panel | `NINSPilot/NINSPilot.py` | Source review, preserved reference, candidate segmentation, editing, reviewed geometry and export |
+| Pilot geometry | `NINSPilot/pilot_core.py` | Projected aperture area, true Feret widths and plane residuals |
 | Image intake | `scripts/NINS_Pilot_Intake.py` | Inventories NRRD exports in ZIP archives, verifies payloads and stages a temporary copy |
 | Guided review | `scripts/NINS_Pilot_Review.py` | Creates eight empty, source-associated annotation nodes and exports review state |
 | Stent geometry | `nins_stent_constraints.py` | Existing v0.3.0 engine: seeded SPF refinement, coronal airway profiles and descriptive morphometry |
@@ -25,7 +28,7 @@ The first milestone is a 12-patient feasibility pilot: three setup cases and nin
 | Manual measurement | `scripts/Landmark_Measurements_0510.py` | Computes the original study measurements from manually supplied lines and curves |
 | Agreement analysis | `scripts/(C) Autoseg_Agreement_0729.py` | Compares compatible manual/automatic measurement tables |
 
-The pilot review helper does not invoke the segmentation or measurement engines. The proposed unified Slicer panel and TotalSegmentator integration are **not implemented**. In the legacy QC script, `run()` defaults to the `engine` stage; segmentation stages must be requested explicitly.
+The new v0.4.0 panel connects threshold candidates, Slicer editing, reviewed rim measurements and the existing contact engine. The original standalone pilot review helper remains separate. An optional TotalSegmentator adapter requires an installed extension; real model inference and clinical performance remain to be validated. The legacy stent engine remains separately runnable. In the legacy QC script, `run()` defaults to the `engine` stage; segmentation stages must be requested explicitly.
 
 ## Measurement interpretation
 
@@ -49,6 +52,7 @@ From the repository directory:
 
 ```bash
 python3 scripts/tests/test_pilot_intake.py
+PythonSlicer -m unittest discover -s tests -p 'test_*.py' -v
 PythonSlicer scripts/tests/test_contact_geometry.py
 PythonSlicer test_calibration.py
 ```
@@ -56,6 +60,8 @@ PythonSlicer test_calibration.py
 Use the `PythonSlicer` executable in your Slicer installation. On macOS, its usual path is `/Applications/Slicer.app/Contents/bin/PythonSlicer`. The calibration suite requires VTK; ordinary system Python may not include it.
 
 These checks exercise intake, review readiness rules and synthetic geometry/calibration. They do not validate clinical anatomy, stimulation, tissue pressure or insertion. The full legacy QC pipeline needs a separate Slicer validation run on reviewed cases. The original manual-arm repetitions and dataset remain separate from this pilot.
+
+The [panel guide](docs/PILOT_PANEL.md#validation) also describes a complete Slicer integration check on generated straight, narrow and artifact fixtures. GitHub Actions uses the pinned numerical test dependencies in `requirements-test.txt`. The three clinician-reviewed setup cases remain pending.
 
 ## Data handling
 

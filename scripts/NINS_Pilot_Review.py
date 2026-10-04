@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 POINT_ROLES = ("SPF_R", "SPF_L", "CONTACT_R", "CONTACT_L", "ENTRY_R", "ENTRY_L")
 CURVE_ROLES = ("SPF_RIM_R", "SPF_RIM_L")
 REVIEW_FIELDS = ("patient_mapping_verified", "orientation_verified", "coverage_verified",
@@ -53,16 +53,32 @@ def _array_hash(volume_id):
     return hashlib.sha256(memoryview(array).cast("B")).hexdigest()
 
 
-def readiness(volume, review, points):
+def readiness(volume, review, points, sides=None):
     """Conservative intake gate, not clinical validation or automatic enrollment."""
-    reasons = [field for field in REVIEW_FIELDS if review.get(field) is not True]
+    sides = sides or {s: {"status": "assessable"} for s in ("R", "L")}
+    reasons = [field for field in REVIEW_FIELDS if not field.startswith("SPF_") and review.get(field) is not True]
     if max(volume["spacing_mm"]) >= 1.0 - 1e-6:
         reasons.append("not_submillimeter_primary_sampling")
     if min(volume["dimensions_ijk"]) <= 1:
         reasons.append("not_a_3d_volume")
-    for role in ("SPF_R", "SPF_L"):
+    assessable = []
+    for side in ("R", "L"):
+        decision = sides.get(side, {})
+        if decision.get("status") == "unassessable":
+            if not decision.get("reason", "").strip():
+                reasons.append(side + "_needs_unassessable_reason")
+            continue
+        if decision.get("status") != "assessable":
+            reasons.append(side + "_needs_side_decision")
+            continue
+        assessable.append(side)
+        role = "SPF_" + side
+        if review.get(role + "_reviewed") is not True:
+            reasons.append(role + "_reviewed")
         if len(points.get(role, [])) != 1:
             reasons.append(role + "_needs_one_defined_point")
+    if not assessable:
+        reasons.append("no_assessable_side")
     return {"status": "ready_for_assisted_run" if not reasons else "review_incomplete",
             "unresolved": reasons}
 
@@ -97,7 +113,7 @@ def prepare(volume_id, source_id, output_dir):
     return session
 
 
-def capture(session, reviewer_id, review=None, task_minutes=None):
+def capture(session, reviewer_id, review=None, task_minutes=None, sides=None):
     """Export an honest incomplete record if review or landmarks are missing.
 
 reviewer_id must be a code. task_minutes is active human time, not wall time.
@@ -141,7 +157,8 @@ This export contains numeric geometry, IDs and flags only; no volume or DICOM.
                   review=review, points_ras_mm=points, volume=volume,
                   active_task_minutes=task_minutes,
                   wall_elapsed_minutes=(time.monotonic()-session["started_monotonic"])/60,
-                  **readiness(volume, review, points))
+                  sides=sides or {s: {"status": "assessable"} for s in ("R", "L")},
+                  **readiness(volume, review, points, sides))
     result["not_assessed"] = ["SPG localization", "stimulation", "contact pressure",
                               "true Feret diameter", "stent insertion", "clinical validity"]
     path = Path(session["directory"]) / ("review_" + uuid.uuid4().hex[:10] + ".json")

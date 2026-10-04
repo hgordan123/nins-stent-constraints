@@ -28,6 +28,15 @@ PAYLOAD = bytes(range(16))
 
 
 class IntakeTests(unittest.TestCase):
+    def test_one_assessable_side_is_ready(self):
+        volume = dict(spacing_mm=[.5,.5,.5], dimensions_ijk=[20,20,20])
+        checks = dict.fromkeys(review.REVIEW_FIELDS, True)
+        checks['SPF_L_reviewed'] = False
+        sides = dict(R=dict(status='assessable'), L=dict(status='unassessable', reason='Obscured rim'))
+        self.assertEqual(review.readiness(volume, checks, {'SPF_R': [[1,2,3]]}, sides)['status'], 'ready_for_assisted_run')
+        sides['L']['reason'] = ''
+        self.assertEqual(review.readiness(volume, checks, {'SPF_R': [[1,2,3]]}, sides)['status'], 'review_incomplete')
+
     def test_full_integrity_and_metadata_minimization(self):
         with tempfile.TemporaryDirectory() as temp:
             archive = Path(temp) / "source.zip"

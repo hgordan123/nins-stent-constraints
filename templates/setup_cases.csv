@@ -1,0 +1,4 @@
+case_id,source_verified,primary_rater_id,second_rater_id,reference_review_complete,method,reference_minutes,correction_minutes,accepted_sides,failed_sides,failure_reason,measurement_agreement_reviewed,code_revision,model_version,freeze_decision
+P001,,,,,,,,,,,,,,
+P002,,,,,,,,,,,,,,
+P003,,,,,,,,,,,,,,

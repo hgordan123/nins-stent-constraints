@@ -1,6 +1,6 @@
 # Assisted segmentation workflow
 
-Status on September 13, 2026: existing segmentation components are published here; a unified Slicer panel and pretrained-model integration are proposed work.
+Updated October 4, 2026: the [v0.4.0 NINS Pilot panel](PILOT_PANEL.md) connects threshold candidate segmentation, correction, reviewed rim/contact geometry and export. An optional TotalSegmentator adapter is implemented but real model inference is not yet validated. The three clinician-reviewed setup cases remain pending. The older components below remain available separately.
 
 ## Segmentation already in the code
 
@@ -14,7 +14,7 @@ These components belong to the older manual-versus-automatic QC arm. They requir
 
 The enclosed-air mask removes slice-border-connected components. That heuristic can remove true airway communicating with outside air; it is not a validated complete nasal airway label. Likewise, a bone threshold cannot independently identify the SPF or separate named contiguous bones reliably.
 
-## Proposed interface
+## Guided interface
 
 | User action | Automation to connect | Review required |
 |---|---|---|
@@ -36,4 +36,4 @@ Sources: [TotalSegmentator tasks](https://github.com/wasserth/TotalSegmentator#s
 
 First expose the existing tissue proposal and correction steps through one source-associated interface. Compare its correction burden with a TotalSegmentator-initialized workflow on the three setup cases. Freeze the selected method and measurement definitions before the nine evaluation cases. Develop a dedicated SPF localizer only after the reviewed annotations and pilot failure analysis support that next step.
 
-This roadmap does not claim that the integration or a dedicated learned localizer has been built.
+The setup panel implements the threshold/manual comparison path and an optional pretrained-model adapter. A dedicated SPF localizer, validated stimulation model and frozen evaluation workflow remain future work.
