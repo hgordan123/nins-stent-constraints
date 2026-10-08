@@ -290,14 +290,17 @@ def calibrate_intensities(array, sample_stride=3):
         if rest.size and float(rest.min()) - vmin >= CALIB_PAD_MIN_GAP_HU:
             candidates.insert(0, (rest, float(spike.mean())))
 
-    last = None
+    first_result = None
     for sample, pad in candidates:
         res = _fit(sample)
-        last = res if last is None else last
+        if first_result is None:
+            first_result = res
         if res.get("status") == "ok":
             res["padding_fraction"] = pad
             return res
-    return last
+    # No candidate was usable: report the preferred candidate's failure so the
+    # reason reflects the padding-stripped interpretation when one was tried.
+    return first_result
 
 
 def assess_competence(volume_node, array, calib):
@@ -495,6 +498,7 @@ def min_feret_aperture(array, ras_to_ijk, seed, plane="axial",
     baseline = _lumen_baseline(array, ras_to_ijk, seed)
     if baseline is None or baseline >= _th(calib, "LUMEN_HU_MAX", LUMEN_HU_MAX):
         return {"status": "seed_not_in_lumen", "baseline_hu": baseline}
+    prom = _th(calib, "RIM_PROMINENCE_HU", RIM_PROMINENCE_HU)
     best = None
     for ang in np.linspace(0.0, np.pi, int(n_angles), endpoint=False):
         if plane == "axial":
@@ -503,7 +507,6 @@ def min_feret_aperture(array, ras_to_ijk, seed, plane="axial",
             u = np.array([np.cos(ang), 0.0, np.sin(ang)])
         else:
             u = np.array([0.0, np.cos(ang), np.sin(ang)])
-        prom = _th(calib, "RIM_PROMINENCE_HU", RIM_PROMINENCE_HU)
         dp = _rim_distance(array, ras_to_ijk, seed, u, baseline, prom)
         dn = _rim_distance(array, ras_to_ijk, seed, -u, baseline, prom)
         if dp is None or dn is None:
@@ -658,7 +661,6 @@ def lumen_at_coronal(array, ijk_to_ras, ras_to_ijk, seed_ras, spacing,
 
     comp = lab == l
     dt = ndimage.distance_transform_edt(comp, sampling=(dz, dx))
-    cen_ki = ndimage.center_of_mass(comp)
     edge = comp & ~ndimage.binary_erosion(comp)
     ei = np.argwhere(edge)
 
@@ -698,7 +700,8 @@ def lumen_at_coronal(array, ijk_to_ras, ras_to_ijk, seed_ras, spacing,
            "component_max_diameter_mm": float(2 * dt.max()),
            "axis_ki": (int(ax_ki[0]), int(ax_ki[1]))}
 
-    # bony contour by ray casting from the lumen centroid
+    # bony contour by ray casting from the inscribed-circle centre (the axis
+    # point found above), which sits inside the lumen by construction
     cen_ras = (ijk_to_ras @ np.array([ax_ki[1], j, ax_ki[0], 1.0]))[:3]
     rays = []
     for ang in np.linspace(0, 2 * np.pi, BONY_N_RAYS, endpoint=False):
